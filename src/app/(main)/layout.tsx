@@ -2,7 +2,7 @@ import Navbar from '@/components/navbar';
 import { RightSidebar } from '@/components/right-sidebar';
 import { Sidebar } from '@/components/sidebar';
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
