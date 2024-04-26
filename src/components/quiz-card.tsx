@@ -7,37 +7,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { quizCreationSchema } from '@/schemas/form/quiz';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { BookOpen, CopyCheck } from 'lucide-react';
-import { Separator } from './ui/separator';
 import QuizButton from './quiz-button';
+import { BrainCircuit } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function QuizCard() {
+  const router = useRouter();
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-      <Card>
-        <CardHeader>
-          <CardTitle>Quiz Me!</CardTitle>
-          <CardDescription>Click here to create a quiz.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <QuizButton />
-        </CardContent>
-      </Card>
-    </div>
+    <Card
+      className="hover:cursor-pointer hover:opacity-75"
+      onClick={() => {
+        router.push("/quiz");
+      }}
+    >
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <CardTitle className="text-2xl font-bold">Quiz me!</CardTitle>
+        <BrainCircuit size={28} strokeWidth={2.5} />
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          Challenge yourself to a quiz with a topic of your choice.
+        </p>
+      </CardContent>
+    </Card>
   );
 }

@@ -18,8 +18,8 @@ const data = [
     active: <GoHomeFill className="w-6 h-6 mr-4" />,
   },
   {
-    name: 'Courses',
-    link: '/courses',
+    name: 'History',
+    link: '/history',
     icon: <IoBookOutline className="w-6 h-6 mr-4" />,
     active: <IoBook className="w-6 h-6 mr-4" />,
   },
