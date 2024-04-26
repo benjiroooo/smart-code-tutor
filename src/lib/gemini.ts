@@ -7,6 +7,12 @@ interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
 }
 
+function removeFunctionsFromString(str: string) {
+  return str.replace(/\(\) => \{[\s\S]*?\}/g, '');
+}
+
+// Inside your strict_output function, after getting 'content' from Gemini
+
 export const runtime = 'edge';
 
 export async function strict_output(
@@ -56,7 +62,7 @@ export async function strict_output(
     // Ask Google Generative AI for a streaming completion given the prompt
     const response = await genAI
       .getGenerativeModel({
-        model: 'gemini-pro',
+        model: 'gemini-1.0-pro-latest',
         generationConfig: {
           temperature: temperature,
         },
@@ -73,9 +79,15 @@ export async function strict_output(
       });
 
     console.log('response:', (await response.response).text);
-    const content = await response.response;
 
-    let res: string = content.text.toString().replace(/'/g, '"') ?? '';
+    console.log('response: ', response)
+
+    // const content = await response.response.then(response => response.text); 
+    const content = (await response.response).text.toString();
+
+    // let potentiallyValidJSON = removeFunctionsFromString(content.toString());
+
+    let res: string = content.replace(/'/g, '"') ?? '';
     res = res.replace(/(\w)"(\w)/g, "$1'$2");
 
     // let res: string = content.replace(/'/g, '"') ?? "";
@@ -95,8 +107,8 @@ export async function strict_output(
 
     // try-catch block to ensure output format is adhered to
     try {
-      let output: any = JSON.parse(content.text.toString());
-      // let output: any = JSON.parse(res);
+      // let output: any = JSON.parse(content.text.toString());
+      let output: any = JSON.parse(res);
 
       if (list_input) {
         if (!Array.isArray(output)) {
@@ -147,20 +159,16 @@ export async function strict_output(
         }
       }
 
-      
       // Check if it parsed as an object (which would be expected JSON)
-      console.log('Raw Gemini Response:', content);
-      console.log('Type of content.text:', typeof content.text);
-      console.log('Type of content.text:', typeof content);
-      console.error('Response Content:', content.text.toString()); // Log raw response   
-      
-      return list_input ? output : output[0];
+      console.log('Raw Gemini Response:', res);
+      console.error('Response Content:', res); // Log raw response
 
+      return list_input ? output : output[0];
     } catch (e) {
-      console.error('Response Content:', content.text.toString()); // Log raw response
-      error_msg = `\n\nResult: ${content}\n\nError message: ${e}`;
+      console.error('Response Content:', res); // Log raw response
+      error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
       console.log('An exception occurred:', e);
-      console.log('Current invalid json format ', content);
+      console.log('Current invalid json format ', res);
     }
   }
 

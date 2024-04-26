@@ -1,26 +1,26 @@
-"use client";
-import { Game, Question } from "@prisma/client";
-import React from "react";
+'use client';
+import { Game, Question } from '@prisma/client';
+import React from 'react';
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button, buttonVariants } from "./ui/button";
-import { differenceInSeconds } from "date-fns";
-import Link from "next/link";
-import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
-import { checkAnswerSchema, endGameSchema } from "@/schemas/questions";
-import { cn, formatTimeDelta } from "@/lib/utils";
-import MCQCounter from "./MCQCounter";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { z } from "zod";
-import { useToast } from "./ui/use-toast";
+} from '@/components/ui/card';
+import { Button, buttonVariants } from './ui/button';
+import { differenceInSeconds } from 'date-fns';
+import Link from 'next/link';
+import { BarChart, ChevronRight, Loader2, Timer } from 'lucide-react';
+import { checkAnswerSchema, endGameSchema } from '@/schemas/questions';
+import { cn, formatTimeDelta } from '@/lib/utils';
+import MCQCounter from './MCQCounter';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { z } from 'zod';
+import { useToast } from './ui/use-toast';
 
 type Props = {
-  game: Game & { questions: Pick<Question, "id" | "options" | "question">[] };
+  game: Game & { questions: Pick<Question, 'id' | 'options' | 'question'>[] };
 };
 
 const MCQ = ({ game }: Props) => {
@@ -78,23 +78,23 @@ const MCQ = ({ game }: Props) => {
     checkAnswer(undefined, {
       onSuccess: ({ isCorrect }) => {
         if (isCorrect) {
-          setStats((stats) => ({
+          setStats(stats => ({
             ...stats,
             correct_answers: stats.correct_answers + 1,
           }));
           toast({
-            title: "Correct",
-            description: "You got it right!",
+            title: 'Correct',
+            description: 'You got it right!',
           });
         } else {
-          setStats((stats) => ({
+          setStats(stats => ({
             ...stats,
             wrong_answers: stats.wrong_answers + 1,
           }));
           toast({
-            title: "Incorrect",
-            description: "You got it wrong!",
-            variant: "destructive",
+            title: 'Incorrect',
+            description: 'You got it wrong!',
+            variant: 'destructive',
           });
         }
         if (questionIndex === game.questions.length - 1) {
@@ -102,7 +102,7 @@ const MCQ = ({ game }: Props) => {
           setHasEnded(true);
           return;
         }
-        setQuestionIndex((questionIndex) => questionIndex + 1);
+        setQuestionIndex(questionIndex => questionIndex + 1);
       },
     });
   }, [checkAnswer, questionIndex, game.questions.length, toast, endGame]);
@@ -111,36 +111,36 @@ const MCQ = ({ game }: Props) => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.key;
 
-      if (key === "1") {
+      if (key === '1') {
         setSelectedChoice(0);
-      } else if (key === "2") {
+      } else if (key === '2') {
         setSelectedChoice(1);
-      } else if (key === "3") {
+      } else if (key === '3') {
         setSelectedChoice(2);
-      } else if (key === "4") {
+      } else if (key === '4') {
         setSelectedChoice(3);
-      } else if (key === "Enter") {
+      } else if (key === 'Enter') {
         handleNext();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleNext]);
 
   if (hasEnded) {
     return (
-      <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+      <div className="flex flex-col items-center justify-center">
         <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
-          You Completed in{" "}
+          You Completed in{' '}
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
           href={`/statistics/${game.id}`}
-          className={cn(buttonVariants({ size: "lg" }), "mt-2")}
+          className={cn(buttonVariants({ size: 'lg' }), 'mt-2')}
         >
           View Statistics
           <BarChart className="w-4 h-4 ml-2" />
@@ -188,7 +188,7 @@ const MCQ = ({ game }: Props) => {
           return (
             <Button
               key={option}
-              variant={selectedChoice === index ? "default" : "outline"}
+              variant={selectedChoice === index ? 'default' : 'outline'}
               className="justify-start w-full py-8 mb-4"
               onClick={() => setSelectedChoice(index)}
             >

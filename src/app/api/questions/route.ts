@@ -1,4 +1,5 @@
 import { strict_output } from "@/lib/gemini";
+import { runChat } from "@/lib/geminiRenewed";
 import { getQuestionsSchema } from "@/schemas/questions";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
@@ -23,10 +24,9 @@ export async function POST(req: Request, res: Response) {
         }
       );
     } else if (type === "mcq") {
-      questions = await strict_output(
-        "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, store all answers and questions and options in a JSON array",
+      questions = await runChat(
         new Array(amount).fill(
-          `You are to generate a random hard mcq question about ${topic}`
+          `${topic}`
         ),
         {
           question: "question",
@@ -34,7 +34,8 @@ export async function POST(req: Request, res: Response) {
           option1: "option1 with max length of 15 words",
           option2: "option2 with max length of 15 words",
           option3: "option3 with max length of 15 words",
-        }
+        },
+        amount
       );
     }
     return NextResponse.json(
@@ -54,7 +55,7 @@ export async function POST(req: Request, res: Response) {
         }
       );
     } else {
-      console.error("Gemini error", error);
+      console.error("Gemini error:", error);
       return NextResponse.json(
         { error: "An unexpected error occurred." },
         {
