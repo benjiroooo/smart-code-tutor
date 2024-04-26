@@ -1,19 +1,45 @@
 import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
+import Credentials from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { prisma } from '@/lib/db';
+
 import type { NextAuthConfig } from 'next-auth';
+import type { Provider } from 'next-auth/providers';
 
-import { SupabaseAdapter } from '@auth/supabase-adapter';
+const providers: Provider[] = [
+  GitHub,
+  Google,
+];
 
-export const config = {
-  providers: [Google, GitHub],
+export const providerMap = providers.map(provider => {
+  if (typeof provider === 'function') {
+    const providerData = provider();
+    return { id: providerData.id, name: providerData.name };
+  } else {
+    return { id: provider.id, name: provider.name };
+  }
+});
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  session: {
+    strategy: "jwt",
+  },
+  providers,
   pages: {
     signIn: '/login',
   },
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    secret: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  }),
-} satisfies NextAuthConfig;
-
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) { // User is available during sign-in
+        token.id = user.id
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.id = token.id
+      return session
+    },
+  },
+});

@@ -10,22 +10,14 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signIn, config, auth } from '../../../../auth';
+import { login } from './actions';
+import { signIn, auth, providerMap } from '../../../../auth';
 import { redirect } from 'next/navigation';
-
-async function getSession() {
-  const session = await auth();
-  return {
-    session,
-  };
-}
+import { FaGithub, FaGoogle, FaKey } from 'react-icons/fa';
 
 export default async function Login() {
-  const { session } = await getSession();
-
-  // The user is already logged in, redirect to homepage.
-  // Make sure is not the same URL to avoid an infinite loop!
-  if (session) return redirect('/');
+  const session = await auth();
+  if (session?.user) redirect('/home');
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen">
       <Card className="mx-auto max-w-sm">
@@ -37,31 +29,21 @@ export default async function Login() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" required />
-            </div>
-            {Object.values(config.providers).map((provider, index) => (
-              <form key={index} action={provider.authorization.url} method="POST">
-                <Button className="flex flex-row gap-2" type="submit">
-                  <span>Sign in with {provider.name}</span>
+            {Object.values(providerMap).map((provider, index) => (
+              <form
+                key={index}
+                action={async () => {
+                  'use server';
+                  await signIn(provider.id);
+                }}
+              >
+                <Button className="w-full" variant="default" type="submit">
+                  {provider.name === 'GitHub' ? (
+                    <FaGithub className="mr-2" />
+                  ) : (
+                    <FaGoogle className="mr-2" />
+                  )}{' '}
+                  Sign in with {provider.name}
                 </Button>
               </form>
             ))}

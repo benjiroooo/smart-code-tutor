@@ -1,3 +1,4 @@
+import { LogOut } from 'lucide-react';
 import { signIn, signOut } from '../../auth';
 import { Button } from './ui/button';
 
@@ -26,8 +27,13 @@ export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
       }}
       className="w-full"
     >
-      <Button variant="ghost" className="w-full p-0" {...props}>
-        Sign Out
+      <Button
+        variant="ghost"
+        className="justify-start h-8 w-full p-0"
+        {...props}
+      >
+        <LogOut className="h-4 w-4 mr-2 text-rose-500" />{' '}
+        <span className="text-rose-500">Sign Out</span>
       </Button>
     </form>
   );

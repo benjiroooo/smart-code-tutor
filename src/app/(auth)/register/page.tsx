@@ -10,8 +10,15 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { signup } from './actions';
+import { _createClient } from '@/app/supabase/client';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import { signIn, auth, providerMap } from '../../../../auth';
+import { Apple, Github, Key } from 'lucide-react';
+import { FaGithub, FaGoogle, FaKey } from 'react-icons/fa';
 
-export default function Register() {
+export default async function Register() {
   return (
     <div className="flex flex-1 items-center justify-center min-h-screen">
       <Card className="mx-auto max-w-sm">
@@ -22,43 +29,33 @@ export default function Register() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="Max" required />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Robinson" required />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" />
-            </div>
-            <Button type="submit" className="w-full">
-              Create an account
-            </Button>
-            <Button variant="outline" className="w-full">
-              Sign up with GitHub
-            </Button>
-            <Button variant="outline" className="w-full">
-              Sign up with Google
-            </Button>
+          <div className="grid gap-2 mt-2">
+            {Object.values(providerMap).map((provider, index) => (
+              <form
+                key={index}
+                action={async () => {
+                  'use server';
+                  await signIn(provider.id);
+                }}
+              >
+                <Button
+                  className="w-full mb-2"
+                  variant="default"
+                  type="submit"
+                >
+                  {provider.name === 'GitHub' ? (
+                    <FaGithub className="mr-2" />
+                  ) : (
+                    <FaGoogle className="mr-2" />
+                  )}{' '}
+                  Sign in with {provider.name}
+                </Button>
+              </form>
+            ))}
           </div>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
-            <Link href="#" className="underline">
+            <Link href="/login" className="underline">
               Sign in
             </Link>
           </div>

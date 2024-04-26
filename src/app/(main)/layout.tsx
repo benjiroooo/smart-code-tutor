@@ -1,6 +1,5 @@
 import Navbar from '@/components/navbar';
-import { RightSidebar } from '@/components/right-sidebar';
-import { Sidebar } from '@/components/sidebar';
+import Sidebar from '@/components/sidebar';
 
 export default async function MainLayout({
   children,
@@ -12,8 +11,7 @@ export default async function MainLayout({
       <Navbar />
       <div className="flex flex-row">
         <Sidebar />
-        <section className="flex w-[50%]">{children}</section>
-        <RightSidebar />
+        <section className="flex w-[75%] h-newscreen">{children}</section>
       </div>
     </section>
   );
