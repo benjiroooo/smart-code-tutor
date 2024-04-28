@@ -1,8 +1,8 @@
-import MCQ from "@/components/MCQ";
-import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
-import React from "react";
-import { auth } from "../../../../../../auth";
+import MCQ from '@/components/MCQ';
+import { prisma } from '@/lib/db';
+import { redirect } from 'next/navigation';
+import React from 'react';
+import { auth } from '../../../../../../auth';
 
 type Props = {
   params: {
@@ -13,7 +13,7 @@ type Props = {
 const MCQPage = async ({ params: { gameId } }: Props) => {
   const session = await auth();
   if (!session?.user) {
-    return redirect("/login");
+    return redirect('/login');
   }
 
   const game = await prisma.game.findUnique({
@@ -30,10 +30,14 @@ const MCQPage = async ({ params: { gameId } }: Props) => {
       },
     },
   });
-  if (!game || game.gameType === "open_ended") {
-    return redirect("/quiz");
+  if (!game || game.gameType === 'open_ended') {
+    return redirect('/quiz');
   }
-  return <MCQ game={game} />;
+  return (
+    <div className='flex flex-1 items-center justify-center'>
+      <MCQ game={game} />
+    </div>
+  );
 };
 
 export default MCQPage;

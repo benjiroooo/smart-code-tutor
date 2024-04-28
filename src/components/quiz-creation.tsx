@@ -1,9 +1,9 @@
-"use client";
-import { quizCreationSchema } from "@/schemas/form/quiz";
-import React from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+'use client';
+import { quizCreationSchema } from '@/schemas/form/quiz';
+import React from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -12,23 +12,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { BookOpen, CopyCheck } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import axios, { AxiosError } from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { BookOpen, CopyCheck } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import axios, { AxiosError } from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import LoadingQuestions from "./loading-questions";
+} from '@/components/ui/card';
+import LoadingQuestions from './loading-questions';
 
 type Props = {
   topic: string;
@@ -43,7 +43,7 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   const { toast } = useToast();
   const { mutate: getQuestions, isPending } = useMutation({
     mutationFn: async ({ amount, topic, type }: Input) => {
-      const response = await axios.post("/api/game", { amount, topic, type });
+      const response = await axios.post('/api/game', { amount, topic, type });
       return response.data;
     },
   });
@@ -52,7 +52,7 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
       topic: topicParam,
-      type: "mcq",
+      type: 'mcq',
       amount: 3,
     },
   });
@@ -60,14 +60,14 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   const onSubmit = async (data: Input) => {
     setShowLoader(true);
     getQuestions(data, {
-      onError: (error) => {
+      onError: error => {
         setShowLoader(false);
         if (error instanceof AxiosError) {
           if (error.response?.status === 500) {
             toast({
-              title: "Error",
-              description: "Something went wrong. Please try again later.",
-              variant: "destructive",
+              title: 'Error',
+              description: 'Something went wrong. Please try again later.',
+              variant: 'destructive',
             });
           }
         }
@@ -75,9 +75,9 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
       onSuccess: ({ gameId }: { gameId: string }) => {
         setFinishedLoading(true);
         setTimeout(() => {
-          if (form.getValues("type") === "mcq") {
+          if (form.getValues('type') === 'mcq') {
             router.push(`/play/mcq/${gameId}`);
-          } else if (form.getValues("type") === "open_ended") {
+          } else if (form.getValues('type') === 'open_ended') {
             router.push(`/play/open-ended/${gameId}`);
           }
         }, 2000);
@@ -87,7 +87,11 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   form.watch();
 
   if (showLoader) {
-    return <LoadingQuestions finished={finishedLoading} />;
+    return (
+      <div className="flex items-center justify-center w-full">
+        <LoadingQuestions finished={finishedLoading} />
+      </div>
+    );
   }
 
   return (
@@ -128,8 +132,8 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
                         placeholder="How many questions?"
                         type="number"
                         {...field}
-                        onChange={(e) => {
-                          form.setValue("amount", parseInt(e.target.value));
+                        onChange={e => {
+                          form.setValue('amount', parseInt(e.target.value));
                         }}
                         min={1}
                         max={10}
@@ -147,11 +151,11 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
               <div className="flex justify-between">
                 <Button
                   variant={
-                    form.getValues("type") === "mcq" ? "default" : "secondary"
+                    form.getValues('type') === 'mcq' ? 'default' : 'secondary'
                   }
                   className="w-1/2 rounded-none rounded-l-lg"
                   onClick={() => {
-                    form.setValue("type", "mcq");
+                    form.setValue('type', 'mcq');
                   }}
                   type="button"
                 >
@@ -160,12 +164,12 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
                 <Separator orientation="vertical" />
                 <Button
                   variant={
-                    form.getValues("type") === "open_ended"
-                      ? "default"
-                      : "secondary"
+                    form.getValues('type') === 'open_ended'
+                      ? 'default'
+                      : 'secondary'
                   }
                   className="w-1/2 rounded-none rounded-r-lg"
-                  onClick={() => form.setValue("type", "open_ended")}
+                  onClick={() => form.setValue('type', 'open_ended')}
                   type="button"
                 >
                   <BookOpen className="w-4 h-4 mr-2" /> Open Ended

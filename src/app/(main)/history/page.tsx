@@ -1,21 +1,21 @@
-import HistoryComponent from "@/components/HistoryComponent";
-import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React from "react";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { LucideLayoutDashboard } from "lucide-react";
-import { auth } from "../../../../auth";
+import HistoryComponent from '@/components/HistoryComponent';
+import { redirect } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import Link from 'next/link';
+import { buttonVariants } from '@/components/ui/button';
+import { LucideLayoutDashboard } from 'lucide-react';
+import { auth } from '../../../../auth';
 
 type Props = {};
 
 const History = async (props: Props) => {
   const session = await auth();
   if (!session?.user) {
-    return redirect("/login");
+    return redirect('/login');
   }
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[400px]">
+    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[500px]">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

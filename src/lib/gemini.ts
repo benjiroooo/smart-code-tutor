@@ -1,14 +1,9 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GoogleGenerativeAIStream, Message, StreamingTextResponse } from 'ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
-}
-
-function removeFunctionsFromString(str: string) {
-  return str.replace(/\(\) => \{[\s\S]*?\}/g, '');
 }
 
 // Inside your strict_output function, after getting 'content' from Gemini

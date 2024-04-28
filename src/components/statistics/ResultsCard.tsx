@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, Trophy } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Award, Trophy } from 'lucide-react';
 type Props = { accuracy: number };
 
 const ResultsCard = ({ accuracy }: Props) => {
@@ -18,7 +18,7 @@ const ResultsCard = ({ accuracy }: Props) => {
             <div className="flex flex-col text-2xl font-semibold text-yellow-400">
               <span className="">Impressive!</span>
               <span className="text-sm text-center text-black opacity-50">
-                {"> 75% accuracy"}
+                {'> 75% accuracy'}
               </span>
             </div>
           </>
@@ -28,17 +28,17 @@ const ResultsCard = ({ accuracy }: Props) => {
             <div className="flex flex-col text-2xl font-semibold text-stone-400">
               <span className="">Good job!</span>
               <span className="text-sm text-center text-black opacity-50">
-                {"> 25% accuracy"}
+                {'> 25% accuracy'}
               </span>
             </div>
           </>
         ) : (
           <>
-            <Trophy className="mr-4" stroke="brown" size={50} />
+            <Trophy className="mr-4 text-rose-600" size={50} />
             <div className="flex flex-col text-2xl font-semibold text-yellow-800">
               <span className="">Nice try!</span>
               <span className="text-sm text-center text-black opacity-50">
-                {"< 25% accuracy"}
+                {'< 25% accuracy'}
               </span>
             </div>
           </>

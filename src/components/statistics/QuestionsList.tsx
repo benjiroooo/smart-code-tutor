@@ -1,5 +1,5 @@
-"use client";
-import React from "react";
+'use client';
+import React from 'react';
 
 import {
   Table,
@@ -9,8 +9,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Question } from "@prisma/client";
+} from '@/components/ui/table';
+import { Question } from '@prisma/client';
 type Props = {
   questions: Question[];
 };
@@ -25,7 +25,7 @@ const QuestionsList = ({ questions }: Props) => {
           <TableHead>Question & Correct Answer</TableHead>
           <TableHead>Your Answer</TableHead>
 
-          {questions[0].questionType === "open_ended" && (
+          {questions[0].questionType === 'open_ended' && (
             <TableHead className="w-[10px] text-right">Accuracy</TableHead>
           )}
         </TableRow>
@@ -45,14 +45,14 @@ const QuestionsList = ({ questions }: Props) => {
                     <br />
                     <span className="font-semibold">{answer}</span>
                   </TableCell>
-                  {questions[0].questionType === "open_ended" ? (
+                  {questions[0].questionType === 'open_ended' ? (
                     <TableCell className={`font-semibold`}>
                       {userAnswer}
                     </TableCell>
                   ) : (
                     <TableCell
                       className={`${
-                        isCorrect ? "text-green-600" : "text-red-600"
+                        isCorrect ? 'text-emerald-600' : 'text-rose-600'
                       } font-semibold`}
                     >
                       {userAnswer}
